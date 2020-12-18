@@ -33,7 +33,6 @@ Receptive Field - 32
         return F.log_softmax(x)
 ```
 ```python
-Requirement already satisfied: torchsummary in /usr/local/lib/python3.6/dist-packages (1.5.1)
 ----------------------------------------------------------------
         Layer (type)               Output Shape         Param #    Receptive Layer
 ================================================================

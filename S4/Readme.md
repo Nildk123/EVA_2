@@ -5,7 +5,7 @@ Reached 99.44% Accuracy first at 18th epoch
 Number of parameters in the model - 13,322
 Receptive Field - 32
 
-
+```python
     def __init__(self):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 8, 3, padding=1) #input -28 OUtput- 28 RF- 3
@@ -31,39 +31,40 @@ Receptive Field - 32
         x = F.adaptive_avg_pool2d(x, (1, 1))
         x = x.view(-1, 10)
         return F.log_softmax(x)
-
-
-
-#### ---------------------------------------------------------------------------------------
-####        Layer (type)     ->          Output Shape    ->     Param       -> Receptive Layer
-#### ====================================================================================
-####            Conv2d-1     ->       [-1, 8, 28, 28]      ->        80     -> 3
-####       BatchNorm2d-2     ->       [-1, 8, 28, 28]       ->       16     -> 3
-####            Conv2d-3     ->      [-1, 16, 28, 28]       ->    1,168     -> 5
-####       BatchNorm2d-4     ->      [-1, 16, 28, 28]       ->       32     -> 5
-####         MaxPool2d-5     ->      [-1, 16, 14, 14]       ->        0     -> 10
-####            Conv2d-6     ->      [-1, 16, 14, 14]       ->    2,320     -> 12
-####       BatchNorm2d-7     ->      [-1, 16, 14, 14]       ->       32     -> 12
-####            Conv2d-8     ->      [-1, 16, 14, 14]       ->    2,320     -> 14
-####       BatchNorm2d-9     ->      [-1, 16, 14, 14]       ->       32     -> 14
-####        MaxPool2d-10     ->        [-1, 16, 7, 7]       ->        0     -> 28
-####           Conv2d-11     ->        [-1, 16, 5, 5]       ->    2,320     -> 30
-####      BatchNorm2d-12     ->        [-1, 16, 5, 5]       ->       32     -> 30
-####           Conv2d-13     ->        [-1, 32, 3, 3]       ->    4,640     -> 32
-####           Conv2d-14     ->        [-1, 10, 3, 3]       ->      330     -> 32
-#### =================================================================================
-#### Total params: 13,322
-#### Trainable params: 13,322
-#### Non-trainable params: 0
-#### ----------------------------------------------------------------
-#### Input size (MB): 0.00
-#### Forward/backward pass size (MB): 0.42
-#### Params size (MB): 0.05
-#### Estimated Total Size (MB): 0.48
-#### ----------------------------------------------------------------
+```
+```python
+Requirement already satisfied: torchsummary in /usr/local/lib/python3.6/dist-packages (1.5.1)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #    Receptive Layer
+================================================================
+            Conv2d-1            [-1, 8, 28, 28]              80         3
+       BatchNorm2d-2            [-1, 8, 28, 28]              16         3
+            Conv2d-3           [-1, 16, 28, 28]           1,168         5
+       BatchNorm2d-4           [-1, 16, 28, 28]              32         5
+         MaxPool2d-5           [-1, 16, 14, 14]               0         10
+            Conv2d-6           [-1, 16, 14, 14]           2,320         12
+       BatchNorm2d-7           [-1, 16, 14, 14]              32         12
+            Conv2d-8           [-1, 16, 14, 14]           2,320         14
+       BatchNorm2d-9           [-1, 16, 14, 14]              32         14
+        MaxPool2d-10             [-1, 16, 7, 7]               0         28
+           Conv2d-11             [-1, 16, 5, 5]           2,320         30
+      BatchNorm2d-12             [-1, 16, 5, 5]              32         30
+           Conv2d-13             [-1, 32, 3, 3]           4,640         32
+           Conv2d-14             [-1, 10, 3, 3]             330         32
+================================================================
+Total params: 13,322
+Trainable params: 13,322
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.42
+Params size (MB): 0.05
+Estimated Total Size (MB): 0.48
+```
 
 
 #### LOGS
+```python
 
   0%|          | 0/1875 [00:00<?, ?it/s]/usr/local/lib/python3.6/dist-packages/ipykernel_launcher.py:27: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
 loss=0.13960422575473785 batch_id=1874: 100%|██████████| 1875/1875 [00:25<00:00, 74.70it/s]
@@ -142,4 +143,4 @@ loss=7.31154577806592e-05 batch_id=1874: 100%|██████████| 18
 
 Test set: Average loss: 0.0200, Accuracy: 9938/10000 (99.3800%)
 
-
+```

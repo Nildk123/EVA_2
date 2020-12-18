@@ -1,11 +1,69 @@
 Assignment Objective
----------- Reach 99.44% Accuracy on MNIST dataset using less than 20k params-------------
+### ---------- Reach 99.44% Accuracy on MNIST dataset using less than 20k params-------------
 
 Reached 99.44% Accuracy first at 18th epoch
 Number of parameters in the model - 13,322
 Receptive Field - 32
 
-LOGS
+
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 8, 3, padding=1) #input -28 OUtput- 28 RF- 3
+        self.BatchNorm1 = nn.BatchNorm2d(8)
+        self.conv2 = nn.Conv2d(8, 16, 3, padding=1) #input -28 OUtput- 28 RF- 5
+        self.BatchNorm2 = nn.BatchNorm2d(16)
+        self.pool1 = nn.MaxPool2d(2, 2) #input -28 OUtput- 14 RF- 10
+        self.conv3 = nn.Conv2d(16, 16, 3, padding=1) #input -14 OUtput- 14 RF- 12
+        self.BatchNorm3 = nn.BatchNorm2d(16)
+        self.conv4 = nn.Conv2d(16, 16, 3, padding=1) #input -14 OUtput- 14 RF- 14
+        self.BatchNorm4 = nn.BatchNorm2d(16)
+        self.pool2 = nn.MaxPool2d(2, 2) #input -7 OUtput- 7 RF- 28
+        self.conv5 = nn.Conv2d(16, 16, 3) #input -7 OUtput- 5 RF- 30
+        self.BatchNorm5 = nn.BatchNorm2d(16)
+        self.conv6 = nn.Conv2d(16, 32, 3) #input -5 OUtput- 3 RF- 32
+        self.conv7 = nn.Conv2d(32, 10, 1) #input -3 OUtput- 3 RF- 32
+
+    def forward(self, x):
+        x = self.pool1(F.relu(self.BatchNorm2(self.conv2(F.relu(self.BatchNorm1(self.conv1(x)))))))
+        x = self.pool2(F.relu(self.BatchNorm4(self.conv4(F.relu(self.BatchNorm3(self.conv3(x)))))))
+        x = F.relu(self.conv6(F.relu(self.BatchNorm5(self.conv5(x)))))
+        x = self.conv7(x)
+        x = F.adaptive_avg_pool2d(x, (1, 1))
+        x = x.view(-1, 10)
+        return F.log_softmax(x)
+
+
+
+#### ---------------------------------------------------------------------------------------
+####        Layer (type)     ->          Output Shape    ->     Param       -> Receptive Layer
+#### ====================================================================================
+####            Conv2d-1     ->       [-1, 8, 28, 28]      ->        80     -> 3
+####       BatchNorm2d-2     ->       [-1, 8, 28, 28]       ->       16     -> 3
+####            Conv2d-3     ->      [-1, 16, 28, 28]       ->    1,168     -> 5
+####       BatchNorm2d-4     ->      [-1, 16, 28, 28]       ->       32     -> 5
+####         MaxPool2d-5     ->      [-1, 16, 14, 14]       ->        0     -> 10
+####            Conv2d-6     ->      [-1, 16, 14, 14]       ->    2,320     -> 12
+####       BatchNorm2d-7     ->      [-1, 16, 14, 14]       ->       32     -> 12
+####            Conv2d-8     ->      [-1, 16, 14, 14]       ->    2,320     -> 14
+####       BatchNorm2d-9     ->      [-1, 16, 14, 14]       ->       32     -> 14
+####        MaxPool2d-10     ->        [-1, 16, 7, 7]       ->        0     -> 28
+####           Conv2d-11     ->        [-1, 16, 5, 5]       ->    2,320     -> 30
+####      BatchNorm2d-12     ->        [-1, 16, 5, 5]       ->       32     -> 30
+####           Conv2d-13     ->        [-1, 32, 3, 3]       ->    4,640     -> 32
+####           Conv2d-14     ->        [-1, 10, 3, 3]       ->      330     -> 32
+#### =================================================================================
+#### Total params: 13,322
+#### Trainable params: 13,322
+#### Non-trainable params: 0
+#### ----------------------------------------------------------------
+#### Input size (MB): 0.00
+#### Forward/backward pass size (MB): 0.42
+#### Params size (MB): 0.05
+#### Estimated Total Size (MB): 0.48
+#### ----------------------------------------------------------------
+
+
+#### LOGS
 
   0%|          | 0/1875 [00:00<?, ?it/s]/usr/local/lib/python3.6/dist-packages/ipykernel_launcher.py:27: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
 loss=0.13960422575473785 batch_id=1874: 100%|██████████| 1875/1875 [00:25<00:00, 74.70it/s]

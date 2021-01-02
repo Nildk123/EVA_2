@@ -1,144 +1,123 @@
-1. Target - Reach 99.4% accuracy in Validation within 15epochs using 10k params
-2. Experimented on regularizer, augmentation, learning rate, and scheduler to reach the desired result
-3. Experimented with Different architectures
-4. Files are in order of experiments - EVA4S5F9_experiment1.ipynb < EVA4S5F9_experiment2.ipynb < EVA4S5F9_experiment3.ipynb
-5. EVA4S5F9_Final.ipynb is the final notebook that can be used for evaluation
+We tried to experiment with bunch of model. But at end we tried different iteration of Same model with different learning rate & Schedular & Created trimmed version of the those model to get the final model
 
-#Final Model:
+### Iteration 1 
 
 ```python
-import torch.nn.functional as F
-dropout_value = 0.1
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        # Input Block
-        self.convblock1 = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=10, kernel_size=(3, 3), padding=0, bias=False),
-            nn.ReLU(),
-            nn.BatchNorm2d(10),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 26 ,Reseptive Field 3
-
-        # CONVOLUTION BLOCK 1
-        self.convblock2 = nn.Sequential(
-            nn.Conv2d(in_channels=10, out_channels=16, kernel_size=(3, 3), padding=0, bias=False),
-            nn.ReLU(),
-            nn.BatchNorm2d(16),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 24 ,Reseptive Field 5
-
-        # TRANSITION BLOCK 1
-
-        self.pool1 = nn.MaxPool2d(2, 2) # output_size = 12 ,Reseptive Field 6
-
-        ## RES block 1
-        self.convblock3 = nn.Sequential(
-            nn.Conv2d(in_channels=16, out_channels=10, kernel_size=(1, 1), padding=0, bias=False),
-            nn.BatchNorm2d(10),
-            nn.ReLU(),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 12 ,Reseptive Field 6
-
-        # CONVOLUTION BLOCK 2
-        self.convblock4 = nn.Sequential(
-            nn.Conv2d(in_channels=10, out_channels=10, kernel_size=(3, 3), padding=0, bias=False),
-            nn.ReLU(),            
-            nn.BatchNorm2d(10),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 10,Reseptive Field 10
-
-        self.convblock5 = nn.Sequential(
-            nn.Conv2d(in_channels=10, out_channels=32, kernel_size=(1, 1), padding=0, bias=False),
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 10, ,Reseptive Field 10
-
-        #RES Block 2
-        self.convblock6 = nn.Sequential(
-            nn.Conv2d(in_channels=32, out_channels=10, kernel_size=(1, 1), padding=0, bias=False),
-            nn.ReLU(),            
-            nn.BatchNorm2d(10),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 10 ,Reseptive Field 10
-
-        self.convblock7 = nn.Sequential(
-            nn.Conv2d(in_channels=10, out_channels=10, kernel_size=(3, 3), padding=0, bias=False),
-            nn.ReLU(),            
-            nn.BatchNorm2d(10),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 8,Reseptive Field 14
-
-        self.convblock8 = nn.Sequential(
-            nn.Conv2d(in_channels=10, out_channels=32, kernel_size=(1, 1), padding=0, bias=False),
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 8 ,Reseptive Field 14
-
-        #RES Block 3
-        self.convblock9 = nn.Sequential(
-            nn.Conv2d(in_channels=32, out_channels=10, kernel_size=(1, 1), padding=0, bias=False),
-            nn.ReLU(),            
-            nn.BatchNorm2d(10),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 8,Reseptive Field 14
-
-        self.convblock10 = nn.Sequential(
-            nn.Conv2d(in_channels=10, out_channels=14, kernel_size=(3, 3), padding=0, bias=False),
-            nn.ReLU(),            
-            nn.BatchNorm2d(14),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 6,Reseptive Field 18
-
-        self.convblock11 = nn.Sequential(
-            nn.Conv2d(in_channels=14, out_channels=16, kernel_size=(3, 3), padding=0, bias=False),
-            nn.ReLU(),            
-            nn.BatchNorm2d(16),
-            #nn.Dropout(dropout_value)
-        ) # output_size = 4,Reseptive Field 22
-        
-        # OUTPUT BLOCK
-        self.gap = nn.Sequential(
-            nn.AvgPool2d(kernel_size=4)
-        ) # output_size = 1, Reseptive Field 28
-
-        self.convblock12 = nn.Sequential(
-              nn.Conv2d(in_channels=16, out_channels=10, kernel_size=(1, 1), padding=0, bias=False),
-            # nn.BatchNorm2d(10),
-            # nn.ReLU(),
-            # nn.Dropout(dropout_value)
-        ) # output_size = 1, Reseptive Field 28
-
-
-        self.dropout = nn.Dropout(dropout_value)
-
-    def forward(self, x):
-        x = self.convblock1(x)
-        x = self.convblock2(x)
-        x = self.convblock3(x)
-        x = self.pool1(x)
-        x = self.convblock4(x)
-        x = self.convblock5(x)
-        #x = self.pool2(x)
-        x = self.convblock6(x)
-        x = self.convblock7(x)
-        x = self.convblock8(x)
-        x = self.convblock9(x)
-        x = self.convblock10(x)
-        x = self.convblock11(x)
-        x = self.gap(x)        
-        x = self.convblock12(x)
-
-        x = x.view(-1, 10)
-        return F.log_softmax(x, dim=-1)
-
+Requirement already satisfied: torchsummary in /usr/local/lib/python3.6/dist-packages (1.5.1)
+cpu
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1           [-1, 10, 26, 26]              90
+              ReLU-2           [-1, 10, 26, 26]               0
+       BatchNorm2d-3           [-1, 10, 26, 26]              20
+           Dropout-4           [-1, 10, 26, 26]               0
+            Conv2d-5           [-1, 10, 24, 24]             900
+              ReLU-6           [-1, 10, 24, 24]               0
+       BatchNorm2d-7           [-1, 10, 24, 24]              20
+           Dropout-8           [-1, 10, 24, 24]               0
+            Conv2d-9           [-1, 10, 24, 24]             100
+        MaxPool2d-10           [-1, 10, 12, 12]               0
+           Conv2d-11           [-1, 16, 10, 10]           1,440
+             ReLU-12           [-1, 16, 10, 10]               0
+      BatchNorm2d-13           [-1, 16, 10, 10]              32
+          Dropout-14           [-1, 16, 10, 10]               0
+           Conv2d-15             [-1, 16, 8, 8]           2,304
+             ReLU-16             [-1, 16, 8, 8]               0
+      BatchNorm2d-17             [-1, 16, 8, 8]              32
+          Dropout-18             [-1, 16, 8, 8]               0
+           Conv2d-19             [-1, 16, 6, 6]           2,304
+             ReLU-20             [-1, 16, 6, 6]               0
+      BatchNorm2d-21             [-1, 16, 6, 6]              32
+          Dropout-22             [-1, 16, 6, 6]               0
+           Conv2d-23             [-1, 16, 6, 6]           2,304
+             ReLU-24             [-1, 16, 6, 6]               0
+      BatchNorm2d-25             [-1, 16, 6, 6]              32
+          Dropout-26             [-1, 16, 6, 6]               0
+        AvgPool2d-27             [-1, 16, 1, 1]               0
+           Conv2d-28             [-1, 10, 1, 1]             160
+================================================================
+Total params: 9,770
+Trainable params: 9,770
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.55
+Params size (MB): 0.04
+Estimated Total Size (MB): 0.59
 ```
 
-#Final Parameter 
+It reached 99.4% but was not consistent enough, so we we tried the same model with different learning rate,below is the final two epoch
 
 ```python
+EPOCH: 13
+Loss=0.022484928369522095 Batch_id=937 Accuracy=99.10: 100%|██████████| 938/938 [01:42<00:00,  9.15it/s]
+Loss=0.0023298657033592463 Batch_id=0 Accuracy=100.00:   0%|          | 1/938 [00:00<01:41,  9.25it/s]
+Test set: Average loss: 0.0190, Accuracy: 9941/10000 (99.41%)
+
+EPOCH: 14
+Loss=0.014951080083847046 Batch_id=937 Accuracy=99.09: 100%|██████████| 938/938 [01:42<00:00,  9.18it/s]
+Test set: Average loss: 0.0185, Accuracy: 9937/10000 (99.37%)
+```
+
+### Iteration 2
+
+Same model with below change
+
+```python
+optimizer = optim.SGD(model.parameters(), lr=0.05, momentum=0.9)
+scheduler = StepLR(optimizer, step_size=10, gamma=0.01)
+```
+it reached the 99.4% bit more consistent but still had a random shift
+
+```python
+EPOCH: 12
+Loss=0.01769702322781086 Batch_id=468 Accuracy=99.20: 100%|██████████| 469/469 [00:36<00:00, 12.86it/s]
+  0%|          | 0/469 [00:00<?, ?it/s]
+Test set: Average loss: 0.0198, Accuracy: 9942/10000 (99.42%)
+
+EPOCH: 13
+Loss=0.015365933068096638 Batch_id=468 Accuracy=99.17: 100%|██████████| 469/469 [00:36<00:00, 12.76it/s]
+  0%|          | 0/469 [00:00<?, ?it/s]
+Test set: Average loss: 0.0189, Accuracy: 9939/10000 (99.39%)
+
+EPOCH: 14
+Loss=0.017201708629727364 Batch_id=468 Accuracy=99.19: 100%|██████████| 469/469 [00:37<00:00, 12.57it/s]
+Test set: Average loss: 0.0190, Accuracy: 9941/10000 (99.41%)
+```
+
+### Iteration 3
+
+Change the scheduler a bit
+```python
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
+```
+For final few epoch it performed closely with the 2nd one
+
+```python
+EPOCH: 12
+Loss=0.03713931515812874 Batch_id=468 Accuracy=99.10: 100%|██████████| 469/469 [00:42<00:00, 11.04it/s]
+  0%|          | 0/469 [00:00<?, ?it/s]
+Test set: Average loss: 0.0175, Accuracy: 9944/10000 (99.44%)
+
+EPOCH: 13
+Loss=0.021043211221694946 Batch_id=468 Accuracy=99.13: 100%|██████████| 469/469 [00:41<00:00, 11.39it/s]
+  0%|          | 0/469 [00:00<?, ?it/s]
+Test set: Average loss: 0.0176, Accuracy: 9940/10000 (99.40%)
+
+EPOCH: 14
+Loss=0.05626573786139488 Batch_id=468 Accuracy=99.11: 100%|██████████| 469/469 [00:40<00:00, 11.72it/s]
+Test set: Average loss: 0.0178, Accuracy: 9937/10000 (99.37%)
+```
+
+### Final Model
+
+For final model, model summary is given below
+
+```python
+Requirement already satisfied: torchsummary in /usr/local/lib/python3.6/dist-packages (1.5.1)
+cuda
 ----------------------------------------------------------------
         Layer (type)               Output Shape         Param #
 ================================================================
@@ -189,98 +168,42 @@ Params size (MB): 0.03
 Estimated Total Size (MB): 0.76
 ----------------------------------------------------------------
 ```
+below is the last few epochs 
 
-#Model Logs
 
-```python
-  0%|          | 0/469 [00:00<?, ?it/s]EPOCH: 0
-Loss=0.11214590072631836 Batch_id=468 Accuracy=88.32: 100%|██████████| 469/469 [00:43<00:00, 10.90it/s]
-current Learing Rate:  0.01
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0665, Accuracy: 9835/10000 (98.35%)
-
-EPOCH: 1
-Loss=0.09433918446302414 Batch_id=468 Accuracy=97.74: 100%|██████████| 469/469 [00:42<00:00, 10.91it/s]current Learing Rate:  0.01
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0595, Accuracy: 9829/10000 (98.29%)
-
-EPOCH: 2
-Loss=0.05425375699996948 Batch_id=468 Accuracy=98.27: 100%|██████████| 469/469 [00:43<00:00, 10.85it/s]current Learing Rate:  0.01
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0402, Accuracy: 9877/10000 (98.77%)
-
-EPOCH: 3
-Loss=0.011051923967897892 Batch_id=468 Accuracy=98.46: 100%|██████████| 469/469 [00:42<00:00, 11.03it/s]current Learing Rate:  0.01
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0519, Accuracy: 9841/10000 (98.41%)
-
-EPOCH: 4
-Loss=0.00902416929602623 Batch_id=468 Accuracy=98.64: 100%|██████████| 469/469 [00:43<00:00, 10.85it/s]current Learing Rate:  0.01
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0290, Accuracy: 9920/10000 (99.20%)
-
-EPOCH: 5
-Loss=0.02549041621387005 Batch_id=468 Accuracy=98.83: 100%|██████████| 469/469 [00:42<00:00, 11.04it/s]current Learing Rate:  0.005
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0303, Accuracy: 9896/10000 (98.96%)
-
-EPOCH: 6
-Loss=0.03081030212342739 Batch_id=468 Accuracy=98.99: 100%|██████████| 469/469 [00:42<00:00, 10.98it/s]current Learing Rate:  0.005
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0238, Accuracy: 9926/10000 (99.26%)
-
-EPOCH: 7
-Loss=0.08570990711450577 Batch_id=468 Accuracy=99.01: 100%|██████████| 469/469 [00:43<00:00, 10.82it/s]current Learing Rate:  0.005
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0212, Accuracy: 9937/10000 (99.37%)
-
-EPOCH: 8
-Loss=0.008049164898693562 Batch_id=468 Accuracy=99.09: 100%|██████████| 469/469 [00:42<00:00, 10.91it/s]current Learing Rate:  0.005
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0248, Accuracy: 9924/10000 (99.24%)
-
-EPOCH: 9
-Loss=0.05069735646247864 Batch_id=468 Accuracy=99.06: 100%|██████████| 469/469 [00:42<00:00, 10.98it/s]current Learing Rate:  0.005
-
-  0%|          | 0/469 [00:00<?, ?it/s]
-Test set: Average loss: 0.0218, Accuracy: 9939/10000 (99.39%)
-
-EPOCH: 10
-Loss=0.04626016691327095 Batch_id=468 Accuracy=99.11: 100%|██████████| 469/469 [00:43<00:00, 10.90it/s]current Learing Rate:  0.005
-
-  0%|          | 0/469 [00:00<?, ?it/s]
 Test set: Average loss: 0.0221, Accuracy: 9935/10000 (99.35%)
 
+```python
 EPOCH: 11
-Loss=0.017562782391905785 Batch_id=468 Accuracy=99.21: 100%|██████████| 469/469 [00:43<00:00, 10.88it/s]current Learing Rate:  0.0025
-
+Loss=0.017562782391905785 Batch_id=468 Accuracy=99.21: 100%|██████████| 469/469 [00:43<00:00, 10.88it/s]
+current Learing Rate:  0.0025
   0%|          | 0/469 [00:00<?, ?it/s]
 Test set: Average loss: 0.0202, Accuracy: 9940/10000 (99.40%)
 
 EPOCH: 12
-Loss=0.00921888928860426 Batch_id=468 Accuracy=99.25: 100%|██████████| 469/469 [00:42<00:00, 11.04it/s]current Learing Rate:  0.0025
-
+Loss=0.00921888928860426 Batch_id=468 Accuracy=99.25: 100%|██████████| 469/469 [00:42<00:00, 11.04it/s]
+current Learing Rate:  0.0025
   0%|          | 0/469 [00:00<?, ?it/s]
 Test set: Average loss: 0.0191, Accuracy: 9941/10000 (99.41%)
 
 EPOCH: 13
-Loss=0.06074872240424156 Batch_id=468 Accuracy=99.34: 100%|██████████| 469/469 [00:43<00:00, 10.88it/s]current Learing Rate:  0.0025
-
+Loss=0.06074872240424156 Batch_id=468 Accuracy=99.34: 100%|██████████| 469/469 [00:43<00:00, 10.88it/s]
+current Learing Rate:  0.0025
   0%|          | 0/469 [00:00<?, ?it/s]
 Test set: Average loss: 0.0199, Accuracy: 9937/10000 (99.37%)
 
 EPOCH: 14
-Loss=0.025518519803881645 Batch_id=468 Accuracy=99.31: 100%|██████████| 469/469 [00:43<00:00, 10.73it/s]current Learing Rate:  0.0025
-
-
+Loss=0.025518519803881645 Batch_id=468 Accuracy=99.31: 100%|██████████| 469/469 [00:43<00:00, 10.73it/s]
+current Learing Rate:  0.0025
 Test set: Average loss: 0.0182, Accuracy: 9940/10000 (99.40%)
 
 ```
+
+### Factor deciding the final model
+1. less parameters
+2. Bit more consistent 
+
+### Team
+1. Rahul
+2. Nilanjan
+3. Nitin

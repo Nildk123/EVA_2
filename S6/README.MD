@@ -78,9 +78,9 @@ Estimated Total Size (MB): 0.76
 ![Validation_Accuracy](ValidationACC.png)
 
 ## Validation loss
-![Validation_loss](../s6/ValidationLoss.png)
+![Validation_loss](ValidationLoss.png)
 
 ## 25 Misclassified images
-![25 Missclassified_images](../s6/Missclassified.png)
+![25 Missclassified_images](Missclassified.png)
 
 

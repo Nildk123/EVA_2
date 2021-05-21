@@ -1,1 +1,1 @@
-congig files
+config files

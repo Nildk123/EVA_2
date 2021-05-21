@@ -1,0 +1,4 @@
+masks=./masks
+parameters=./parameters
+images=../images
+camera=./camera.txt

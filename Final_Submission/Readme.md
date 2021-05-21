@@ -44,6 +44,49 @@ In the case of PlaneRCNN, we are using segmentation and Masks output after valid
 
 ### Folder Structure Creation: 
  
+ ```
+ data
+├── images/
+├── midas
+│   ├── custom.data
+│   └── depth
+├── planercnn
+│   ├── camera.txt
+│   ├── custom.data
+│   ├── masks
+│   └── parameters
+├── yolo
+│   ├── custom.data
+│   ├── custom.names
+│   ├── images.shapes
+│   ├── labels
+│   ├── test.shapes
+│   ├── test.txt
+│   ├── train.shapes
+│   └── train.txt
+
+```
+
+ 1. The ```image``` folder contains all the original images
+ 
+ 2. the ```midas/depth``` folder contains all the depth images traind on MiDAS. The ```costom.data``` in midas folder structure the following:
+
+ ```
+ depth=./depth
+images=../images
+```
+
+3. The ```planercnn/masks``` folder contains the plane segmentation images and the ```planercnn/parameters``` folder contains the plane parameters files. ```camera.txt``` is the same as the one used in the inference of vanilla PlaneRCNN. The ```planercnn/custom.data``` file is something like this:
+
+```
+masks=./masks
+parameters=./parameters
+images=../images
+camera=./camera.txt
+```
+
+4. The ```yolo``` folder is structured the same way as mentioned in the YoloV3 repo (https://github.com/ultralytics/yolov3).
+
 ## Training the Model
 
 Training is majorly done using transfer learning strategy. The reason being, the lack of the number of training images and processing power and this process provide satisfactory results in limited time. 
@@ -93,6 +136,8 @@ In the case of PlaneRCNN, issues encountered here were mostly related to depth a
 The final loss was computed as a weighted sum of all the three individual losses. While training it has been observed that PlaneRCNN cannot be trained with a batch size of more than 1. So the entire training process was conducted using batch size of 1. This took a lot of training time on Colab GPU. For training on more than batch size one, from my understanding it can be trained as a part training (train YOLO then PlaneRCNN). 
 
 ``` python
+       #Total loss
+       
         loss = (
             self.config.MIDAS_LOSS_WEIGHT * midas_loss
             + self.config.YOLO_LOSS_WEIGHT * yolo_loss

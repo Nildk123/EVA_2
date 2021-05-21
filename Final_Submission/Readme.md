@@ -26,6 +26,8 @@ ResNext101 to match YOLOv3 decoder requirements followed by decoder YOLO part.
 
 The prime purpose of PlaneRCNN was to generates planes from an image, detects arbitrary number of planes, and reconstructs piecewise planar surfaces from a single RGB image. The feature maps from the ResNext101 is followed into PlaneRCNN block matching up with the encoder output shapes to input of the decoder (PlaneRCNN). We are not uwing the depth portion of PlaneRCNN as this was consumend from MiDAS.  
 
+[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
+
 ## Dataset Creation
 
 As we have already gone through the model, which is a combination of MiDAS, Yolo and PlaneRCNN we have created our own dataset from all three submodels - MiDAS, YoloV3 and PlaneRCNN, which further combined to create the master data.  Manually collected and annotated data of ~3500 images was used as the initial start point. 

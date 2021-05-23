@@ -151,8 +151,8 @@ The final loss was computed as a weighted sum of all the three individual losses
 
 Yolo validated output:
 
-![plot](YoloOut.PNG) 
+![plot](YoloOut.png) 
 
 MiDAS validated output:
 
-![plot](midas.PNG) 
+![plot](midas.png) 

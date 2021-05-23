@@ -149,4 +149,10 @@ The final loss was computed as a weighted sum of all the three individual losses
 
 ## Model Evaluation
 
-Model structure is inspired by:  https://firekind.github.io/project-fox
+Yolo validated output:
+
+![plot](YoloOut.PNG) 
+
+MiDAS validated output:
+
+![plot](midas.PNG) 
